@@ -1,33 +1,58 @@
 'use strict';
 
-function modify(defaultConfig, { target, dev }, webpack) {
-  const config = defaultConfig;
+function makeSwcPlugin(swcOptions) {
+  if (!swcOptions) {
+    swcOptions = {
+      "jsc": {
+        "parser": {
+          "syntax": "ecmascript",
+          "jsx": true,
+          "dynamicImport": false,
+          "numericSeparator": false,
+          "classPrivateProperty": false,
+          "privateMethod": false,
+          "classProperty": false,
+          "functionBind": false,
+          "exportDefaultFrom": false,
+          "exportNamespaceFrom": false,
+          "decorators": false,
+          "decoratorsBeforeExport": false,
+          "nullishCoalescing": false,
+          "importMeta": false,
+          "optionalChaining": false
+        }
+      }
+    };
 
-  config.module.rules = config.module.rules.reduce((rules, rule) => {
+    return function modify(defaultConfig, { target, dev }, webpack) {
+      const config = defaultConfig;
 
-    if (rule.test &&
-      rule.test.toString()===/\.(js|jsx|mjs)$/.toString() &&
-      !rule.enforce) { // !rule.enforce to not conflict with eslint plugin
+      config.module.rules = config.module.rules.reduce((rules, rule) => {
 
-      const { use, ...rest } = rule;
+        if (rule.test &&
+          rule.test.toString()===/\.(js|jsx|mjs)$/.toString() &&
+          !rule.enforce) { // !rule.enforce to not conflict with eslint plugin
 
-      rules.push({ ...rest, ...{
-        use: [{
-            loader: require.resolve('swc-loader'),
-            options: {
-              // swc options
-            }
-          }
-        ]
-      }});
+          const { use, ...rest } = rule;
+
+          rules.push({ ...rest, ...{
+            use: [{
+                loader: require.resolve('swc-loader'),
+                options: swcOptions
+              }
+            ]
+          }});
+        }
+        else {
+          rules.push(rule);
+        }
+        return rules;
+      }, []);
+
+      return config;
     }
-    else {
-      rules.push(rule);
-    }
-    return rules;
-  }, []);
-
-  return config;
+  }
 }
 
-module.exports = modify;
+module.exports = makeSwcPlugin();
+module.exports.makeSwcPlugin = makeSwcPlugin;
