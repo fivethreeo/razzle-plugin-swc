@@ -1,6 +1,6 @@
 {
   "name": "razzle-plugin-swc",
-  "version": "3.0.0",
+  "version": "3.0.2",
   "description": "Use with Razzle",
   "main": "index.js",
   "repository": "git@github.com:fivethreeo/razzle-plugin-swc.git",
@@ -22,7 +22,7 @@
   },
   "jest": {
     "testPathIgnorePatterns" : [
-      "<rootDir>/example/" 
+      "<rootDir>/example/"
     ]
   }
 }
