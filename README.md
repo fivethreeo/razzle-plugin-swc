@@ -1,6 +1,6 @@
 # razzle-plugin-swc
 
-This package contains a plugin for using [SWC](hhttps://swc-project.github.io/) with Razzle
+This package contains a plugin for using [SWC](https://swc-project.github.io/) with Razzle
 
 ## Usage in Razzle Projects
 
